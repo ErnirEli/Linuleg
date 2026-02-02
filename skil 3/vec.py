@@ -1,7 +1,6 @@
 # Copyright 2013 Philip N. Klein
 
-def getitem(v ,k: str) -> int:
-    v: Vec = v
+def getitem(v,k):
     """
     Return the value of entry k in v.
     Be sure getitem(v,k) returns 0 if k is not represented in v.f.
@@ -68,8 +67,22 @@ def equal(u,v):
     >>> Vec({'a','b'},{'a':1}) == Vec({'a','b'},{'a':2})
     False
     """
+    
     assert u.D == v.D
-    pass
+    a = []
+    b = []
+    for k in u.D:
+        if k in u.f:
+            a.append(u.f[k])
+        else:
+            a.append(0)
+        if k in v.f:
+            b.append(v.f[k])
+        else:
+            b.append(0)
+            
+    return a == b
+        
 
 def add(u,v):
     """
@@ -106,11 +119,20 @@ def add(u,v):
     True
     """
     assert u.D == v.D
-    pass
+    new = {}
+    for k in u.D:
+        a = 0
+        b = 0
+        if k in u.f:
+            a = u[k]
+        if k in v.f:
+            b = v[k]
+        new[k] = a + b
 
-def dot(u, v) -> int:
-    u: Vec = u
-    v: Vec = v
+    return Vec(u.D, new)
+        
+
+def dot(u,v):
     """
     Returns the dot product of the two vectors.
 
@@ -141,14 +163,18 @@ def dot(u, v) -> int:
     >>> v1 * v2
     12
     """
-    try:
-        assert u.D == v.D
-        return sum([u[k] * v[k] for k in u.D])
+    assert u.D == v.D
+    new = 0
+    for k in u.D:
+        a = 0
+        b = 0
+        if k in u.f:
+            a = u[k]
+        if k in v.f:
+            b = v[k]
+        new += a * b
 
-    except AssertionError:
-        return
-
-    pass
+    return new
 
 def scalar_mul(v, alpha):
     """
@@ -169,6 +195,12 @@ def scalar_mul(v, alpha):
     True
     """
     pass
+    new = {}
+    for k, r in v.f.items():
+        new[k] = r * alpha
+
+    return Vec(v.D, new)
+
 
 def neg(v):
     """
@@ -186,6 +218,11 @@ def neg(v):
     True
     """
     pass
+    new = {}
+    for k, r in v.f.items():
+        new[k] = r * -1
+
+    return Vec(v.D, new)
 
 ###############################################################################################################################
 
@@ -267,17 +304,40 @@ class Vec:
 
     def __iter__(self):
         raise TypeError('%r object is not iterable' % self.__class__.__name__)
-    
 
-u1 = Vec({'a','b'}, {'a':1, 'b':2})
-u2 = Vec({'a','b'}, {'b':2, 'a':1})
-print(u1*u2)
-print('______')
-print(u1['a'])
-print('_____')
-print(u1)
-print("____")
-for k in u1.D:
-    print(u1[k])
+# v1 = Vec({1, 2}, {1 : 3, 2 : 6})
+# v2 = Vec({1, 2}, {1 : 2, 2 : 1})
+# print(v1 == v2)
+# print(Vec({'a', 'b', 'c'}, {'a': 0}) == Vec({'a', 'b', 'c'}, {}))
 
-k: Vec = 10
+# d = Vec({'x','y','z'}, {'x':2,'y':1})
+# e = Vec({'x','y','z'}, {'z':4,'y':-1})
+# f = Vec({'x','y','z'}, {'x':2,'y':0,'z':4})
+# print(d + e == f)
+# True
+
+# v1 = Vec({'p','q','r','s'}, {'p':2,'s':3,'q':-1,'r':0})
+# v2 = Vec({'p','q','r','s'}, {'p':-2,'r':5})
+# print(v1*v2)
+# # -4
+
+# zero = Vec({'x','y','z','w'}, {})
+# u = Vec({'x','y','z','w'},{'x':1,'y':2,'z':3,'w':4})
+# print(0*u == zero)
+# # True
+# print(1*u == u)
+# # True
+# print(0.5*u == Vec({'x','y','z','w'},{'x':0.5,'y':1,'z':1.5,'w':2}))
+# # True
+# print(u == Vec({'x','y','z','w'},{'x':1,'y':2,'z':3,'w':4}))
+# # True
+
+# u = Vec({1,3,5,7},{1:1,3:2,5:3,7:4})
+# print(-u)
+# # Vec({1, 3, 5, 7},{1: -1, 3: -2, 5: -3, 7: -4})
+# print(u == Vec({1,3,5,7},{1:1,3:2,5:3,7:4}))
+# # True
+# print(-Vec({'a','b','c'}, {'a':1}) == Vec({'a','b','c'}, {'a':-1}))
+# # True
+
+# print(equal(Vec({'y', 'x', 'z'},{'x': 2, 'y': 1}), Vec({'y', 'x', 'z'},{'z': 0, 'y': 1})))
