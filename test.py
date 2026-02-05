@@ -16,6 +16,17 @@
 #         break
 
 
-a = [1, 2]
-a.insert(-1, 99)
-print(a)
+# a = [1, 2]
+# a.insert(-1, 99)
+# print(a)
+
+# a = [[1, 2]]*3
+# a[0][3] = 1
+
+# print(a)
+
+a = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+a.remove(min(a))
+a.remove(min(a))
+print(min(a))

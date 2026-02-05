@@ -30,20 +30,19 @@ def secret_function(u, v, w):
         2. The dot product of u and v is 11, so the added vector scaled is Vec(D, {'a': 99, 'b': 132}).
         3. Since none of the input vectors are equal, the final result is the negated scaled vector: Vec(D, {'a': -99, 'b': -132}).
     """
-    new = u + v + w
+    # Add all vectors and create a new one
+    new_vector = u + v + w
+
+    # Calculate alpha value for scaling and scale
     alpha = u * v
+    scaled = alpha * new_vector
+
+    # Check for bool
     if u == v or u == w or v == w:
-        return alpha*new
-    return alpha*(-new)
+        return scaled
+    return -scaled
 
 
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-
-# D = {'a', 'b'}
-# u = Vec(D, {'a': 1, 'b': 2})
-# v = Vec(D, {'a': 3, 'b': 4})
-# w = Vec(D, {'a': 5, 'b': 6})
-# # print(secret_function(u, v, w) == Vec(D, {'a': -99, 'b': -132}))
-# # True

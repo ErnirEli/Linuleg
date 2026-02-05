@@ -1,6 +1,6 @@
 # Copyright 2013 Philip N. Klein
 
-def getitem(v,k):
+def getitem(v,k: str) -> int:
     """
     Return the value of entry k in v.
     Be sure getitem(v,k) returns 0 if k is not represented in v.f.
@@ -14,7 +14,7 @@ def getitem(v,k):
     assert k in v.D
     return v.f.get(k, 0)
 
-def setitem(v,k,val):
+def setitem(v, k: str, val: int):
     """
     Set the element of v with label d to be val.
     setitem(v,d,val) should set the value for key d even if d
@@ -34,7 +34,7 @@ def setitem(v,k,val):
     assert k in v.D
     v.f[k] = val
 
-def equal(u,v):
+def equal(u,v) -> bool:
     """
     Return true iff u is equal to v.
     Because of sparse representation, it is not enough to compare dictionaries
@@ -69,19 +69,20 @@ def equal(u,v):
     """
     
     assert u.D == v.D
-    a = []
-    b = []
-    for k in u.D:
-        if k in u.f:
-            a.append(u.f[k])
-        else:
-            a.append(0)
-        if k in v.f:
-            b.append(v.f[k])
-        else:
-            b.append(0)
+    # a = []
+    # b = []
+    # for k in u.D:
+    #     if k in u.f:
+    #         a.append(u.f[k])
+    #     else:
+    #         a.append(0)
+    #     if k in v.f:
+    #         b.append(v.f[k])
+    #     else:
+    #         b.append(0)
+
             
-    return a == b
+    return not any([not(u[k] == v[k]) for k in u.D])
         
 
 def add(u,v):
@@ -119,20 +120,11 @@ def add(u,v):
     True
     """
     assert u.D == v.D
-    new = {}
-    for k in u.D:
-        a = 0
-        b = 0
-        if k in u.f:
-            a = u[k]
-        if k in v.f:
-            b = v[k]
-        new[k] = a + b
 
-    return Vec(u.D, new)
+    return Vec(u.D, {k:u[k]+v[k] for k in u.D})
         
 
-def dot(u,v):
+def dot(u,v) -> int:
     """
     Returns the dot product of the two vectors.
 
@@ -164,19 +156,10 @@ def dot(u,v):
     12
     """
     assert u.D == v.D
-    new = 0
-    for k in u.D:
-        a = 0
-        b = 0
-        if k in u.f:
-            a = u[k]
-        if k in v.f:
-            b = v[k]
-        new += a * b
 
-    return new
+    return sum([u[k] * v[k] for k in u.D])
 
-def scalar_mul(v, alpha):
+def scalar_mul(v, alpha: int):
     """
     Returns the scalar-vector product alpha times v.
 
@@ -194,12 +177,8 @@ def scalar_mul(v, alpha):
     >>> u == Vec({'x','y','z','w'},{'x':1,'y':2,'z':3,'w':4})
     True
     """
-    pass
-    new = {}
-    for k, r in v.f.items():
-        new[k] = r * alpha
 
-    return Vec(v.D, new)
+    return Vec(v.D, {k:r*alpha for k, r in v.f.items()})
 
 
 def neg(v):
@@ -217,12 +196,7 @@ def neg(v):
     >>> -Vec({'a','b','c'}, {'a':1}) == Vec({'a','b','c'}, {'a':-1})
     True
     """
-    pass
-    new = {}
-    for k, r in v.f.items():
-        new[k] = r * -1
-
-    return Vec(v.D, new)
+    return scalar_mul(v, -1)
 
 ###############################################################################################################################
 
@@ -304,40 +278,4 @@ class Vec:
 
     def __iter__(self):
         raise TypeError('%r object is not iterable' % self.__class__.__name__)
-
-# v1 = Vec({1, 2}, {1 : 3, 2 : 6})
-# v2 = Vec({1, 2}, {1 : 2, 2 : 1})
-# print(v1 == v2)
-# print(Vec({'a', 'b', 'c'}, {'a': 0}) == Vec({'a', 'b', 'c'}, {}))
-
-# d = Vec({'x','y','z'}, {'x':2,'y':1})
-# e = Vec({'x','y','z'}, {'z':4,'y':-1})
-# f = Vec({'x','y','z'}, {'x':2,'y':0,'z':4})
-# print(d + e == f)
-# True
-
-# v1 = Vec({'p','q','r','s'}, {'p':2,'s':3,'q':-1,'r':0})
-# v2 = Vec({'p','q','r','s'}, {'p':-2,'r':5})
-# print(v1*v2)
-# # -4
-
-# zero = Vec({'x','y','z','w'}, {})
-# u = Vec({'x','y','z','w'},{'x':1,'y':2,'z':3,'w':4})
-# print(0*u == zero)
-# # True
-# print(1*u == u)
-# # True
-# print(0.5*u == Vec({'x','y','z','w'},{'x':0.5,'y':1,'z':1.5,'w':2}))
-# # True
-# print(u == Vec({'x','y','z','w'},{'x':1,'y':2,'z':3,'w':4}))
-# # True
-
-# u = Vec({1,3,5,7},{1:1,3:2,5:3,7:4})
-# print(-u)
-# # Vec({1, 3, 5, 7},{1: -1, 3: -2, 5: -3, 7: -4})
-# print(u == Vec({1,3,5,7},{1:1,3:2,5:3,7:4}))
-# # True
-# print(-Vec({'a','b','c'}, {'a':1}) == Vec({'a','b','c'}, {'a':-1}))
-# # True
-
-# print(equal(Vec({'y', 'x', 'z'},{'x': 2, 'y': 1}), Vec({'y', 'x', 'z'},{'z': 0, 'y': 1})))
+    
